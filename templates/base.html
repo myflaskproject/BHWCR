@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://use.fontawesome.com/3903c9d7fd.js"></script>
+    <script src="https://cdn.ckeditor.com/4.10.0/standard/ckeditor.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.css" rel="stylesheet"> {% block title %} {% endblock %}
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        .side {
+            font-size: 12px;
+            color: white;
+        }
+        
+        ul.menu {
+            display: inline-block;
+            list-style-type: none;
+            position: fixed;
+        }
+        
+        li.menu_list {
+            height: 80px;
+            width: 40px;
+            position: relative;
+        }
+        
+        li.menu_list .front,
+        a.side {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 86px;
+            width: 100%;
+            padding: 30px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            text-decoration: none;
+            text-transform: uppercase;
+            transition: all .5s ease-out;
+            cursor: pointer;
+        }
+        
+        li.menu_list .front {
+            background-color: #34465d;
+            color: #FFFC00;
+            transform-origin: 0 0;
+        }
+        
+        a.side {
+            background-color: #FFFC00;
+            color: #34465d;
+            transform-origin: 0 0 85px;
+            transform: rotateY(-90deg);
+        }
+        
+        li.menu_list:hover a.side {
+            transform: rotateY(0deg);
+        }
+        
+        li.menu_list:hover .front {
+            transform: rotateY(90deg);
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul class="menu">
+            <li class="menu_list">
+                <span class="front fas fa-home"></span>
+                <a href="/home" class="side">home</a>
+            </li>
+            <li class="menu_list">
+                <span class="front fas fa-plus"></span>
+                <a href="/add" class="side">add</a>
+            </li>
+            <li class="menu_list">
+                <span class="front fas fa-briefcase"></span>
+                <a href="#" class="side">projects</a>
+            </li>
+            <li class="menu_list">
+                <span class="front fas fa-paper-plane"></span>
+                <a href="#" class="side">contact</a>
+            </li>
+        </ul>
+    </nav>
+    {% block body %} {% endblock %}
+
+</body>
+
+</html>

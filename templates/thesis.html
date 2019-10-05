@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block title %}
+<title>Home</title>
+{% endblock %} {% block body %}
+
+<div style="margin-left: 80px;margin-right: 20px;margin-bottom: 80px;margin-top: 20px;
+padding:10px;box-shadow: 0 4px 8px 0 rgba(85, 85, 85, 0.2);">
+    <h1>Hello</h1>
+    {% for q in q %}
+    <p>{{q.title}}</p>
+    <p>{{q.body|safe}}</p>
+    <p>{{q.reference}}</p>
+    <p>{{q.published}}</p>
+    <p>{{q.pdf}}</p>
+    <form action="{{ url_for('delete', id=q.id) }}" method=post>
+        <input type=submit value="Delete">
+    </form>
+    <form action="{{ url_for('edit', id=q.id) }}" method=post>
+        <input type=submit value="Update">
+    </form>
+    <br>
+    <br>
+    <br> {% endfor %}
+
+</div>
+
+{% endblock %}

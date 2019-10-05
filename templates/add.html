@@ -1,0 +1,28 @@
+{% extends 'base.html' %} {% block title %}
+<title>Add</title>
+{% endblock %} {% block body %} {{ ckeditor.load() }}
+<div style="margin-left: 80px;margin-right: 20px;margin-bottom: 80px;margin-top: 20px;
+padding:10px;box-shadow: 0 4px 8px 0 rgba(85, 85, 85, 0.2);">
+    <h1>Add</h1>
+    <form method="POST" action="/added">
+        <label for="fname">Title</label> {{form.title}}
+        <br>
+        <br>
+        <label for="lname">Post</label>{{form.body}}
+        <br>
+        <br>
+
+        <label for="country">Reference</label>{{form.reference}}
+        <br>
+        <br>
+
+        <label for="country">Published</label>{{form.published}}
+        <br>
+        <br>
+        <label for="country">PDF</label>{{form.pdf}}
+        <br>
+        <br> {{form.submit}}
+    </form>
+</div>
+
+{% endblock %}
