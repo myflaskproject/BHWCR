@@ -26,7 +26,7 @@ import os
 
 #CRUD with CKeditor here......
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, SelectField, TextField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
 from flask_ckeditor import CKEditor, CKEditorField
@@ -121,9 +121,9 @@ class Post(db.Model):  # database model class
 class PostForm(FlaskForm):  # form class
 	title = StringField('title',validators=[DataRequired()])
 	body = CKEditorField('body', validators=[DataRequired()])
-	reference = StringField('reference')
-	published = StringField('published')
-	pdf = StringField('pdf')
+	reference = CKEditorField('reference')
+	published = SelectField(u'published', choices=[('IEEE', 'IEEE'), ('SPRINGER', 'SPRINGER'), ('ELSEVIER', 'ELSEVIER'), ('ACM', 'ACM'), ('Others', 'Others')])
+	pdf = CKEditorField('pdf')
 	submit = SubmitField('submit')
 @app.route('/home',methods=['GET','POST'])
 def home():
@@ -176,9 +176,9 @@ def edited(id):
 		post.reference = form.reference.data
 		post.published = form.published.data
 		post.pdf = form.pdf.data
-		db.session.commit()  # commit change into database      
+		db.session.commit()  # commit change into database
+		print("Successfully Updated")      
 		return redirect("/home")
-		print("Successfully Updated")
 	else:
 		print("Not Valid")
 
