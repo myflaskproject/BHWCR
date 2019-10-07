@@ -122,7 +122,7 @@ class PostForm(FlaskForm):  # form class
 	title = StringField('title',validators=[DataRequired()])
 	body = CKEditorField('body', validators=[DataRequired()])
 	reference = CKEditorField('reference')
-	published = SelectField(u'published', choices=[('IEEE', 'IEEE'), ('SPRINGER', 'SPRINGER'), ('ELSEVIER', 'ELSEVIER'), ('ACM', 'ACM'), ('Others', 'Others')])
+	published = SelectField(u'published', choices=[('IEEE', 'IEEE'), ('SPRINGER', 'SPRINGER'), ('ELSEVIER', 'ELSEVIER'), ('ACM', 'ACM'), ('Others', 'Others'),('Source', 'Source')])
 	pdf = CKEditorField('pdf')
 	submit = SubmitField('submit')
 @app.route('/home',methods=['GET','POST'])
