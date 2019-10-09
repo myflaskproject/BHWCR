@@ -7,7 +7,7 @@
 #HTML escaping on your own to keep the application secure. Because of that Flask configures the Jinja2 template engine 
 #for you automatically.
 #requests are objects that flask handles (get set post, etc)
-from flask import Flask, render_template,request,redirect,url_for
+from flask import Flask, render_template,request,redirect,url_for, send_from_directory,make_response
 #scientific computing library for saving, reading, and resizing images
 from scipy.misc import imsave, imread, imresize  #depriciated old version
 #from cv2 import imread, resize
@@ -29,7 +29,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField, TextField
 from wtforms.validators import DataRequired
 from flask_sqlalchemy import SQLAlchemy
-from flask_ckeditor import CKEditor, CKEditorField
+from flask_ckeditor import CKEditor, CKEditorField, upload_fail, upload_success
+import pdfkit
 #CRUD with CKeditor End here......
 
 
@@ -47,6 +48,12 @@ app = Flask(__name__)
 #CRUD with CKeditor here......
 app.secret_key = 'azad-ali-969-md'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///thesis.db'  #4 slash for direct database
+basedir = os.path.abspath(os.path.dirname(__file__))
+app.config['CKEDITOR_SERVE_LOCAL'] = True
+app.config['CKEDITOR_HEIGHT'] = 400
+app.config['CKEDITOR_FILE_UPLOADER'] = 'upload'
+# app.config['CKEDITOR_ENABLE_CSRF'] = True  # if you want to enable CSRF protect, uncomment this line
+app.config['UPLOADED_PATH'] = os.path.join(basedir, 'uploads')
 ckeditor = CKEditor(app)
 db = SQLAlchemy(app)
 #CRUD with CKeditor End here......
@@ -155,6 +162,25 @@ def added():
 		print("Not Valid")
 
 
+@app.route('/files/<filename>')
+def uploaded_files(filename):
+    path = app.config['UPLOADED_PATH']
+    return send_from_directory(path, filename)
+
+import uuid
+
+@app.route('/upload', methods=['POST'])
+def upload():
+    f = request.files.get('upload')
+    extension = f.filename.split('.')[1].lower()
+    if extension not in ['jpg', 'gif', 'png', 'jpeg']:
+        return upload_fail(message='Image only!')
+    unique_filename = str(uuid.uuid4())
+    f.filename = unique_filename + '.' + extension
+    f.save(os.path.join(app.config['UPLOADED_PATH'], f.filename))
+    url = url_for('uploaded_files', filename=f.filename)
+    return upload_success(url=url)
+
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit(id):
 	post = Post.query.get_or_404(id)  # query post in database
@@ -192,6 +218,22 @@ def delete(id):
 	print("Successfully deleted")
 	return redirect("/home")
 
+@app.route('/pdf')
+def makepdf():
+	options = {
+    'page-size': 'Letter',
+    'margin-top': '0.75in',
+    'margin-right': '0.75in',
+    'margin-bottom': '0.75in',
+    'margin-left': '0.75in',
+    'encoding': "UTF-8",
+    'custom-header' : [
+        ('Accept-Encoding', 'gzip')
+    ],
+    'no-outline': None
+	}
+	#css = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js'
+	pdfkit.from_file('templates/thesis.html', 'out.pdf', options=options)
 #CRUD with CKeditor End here......
 
 if __name__ == "__main__":
