@@ -59,7 +59,7 @@ db = SQLAlchemy(app)
 #CRUD with CKeditor End here......
 
 
-
+binary=0
 #global vars for easy reusability
 global model, graph
 #initialize these variables
@@ -69,7 +69,6 @@ def convertImage(imgData1):
     imgstr = re.search(b'data:image/png;base64,(.*)', imgData1).group(1)
     with open('output.png', 'wb') as output:
         output.write(base64.b64decode(imgstr))
-	
 
 @app.route('/')
 def index():
@@ -97,7 +96,15 @@ def predict():
 	#imshow(x)
 	#convert to a 4D tensor to feed into our model
 	x = x.reshape(1,112,112,1)
+	with open('bin_file.txt', 'w') as f:
+		np.array(x, dtype=np.int16).tofile(f)
 	x=x/255
+	binary=[x for x in x]
+	#with open('bin_file.txt', 'r') as f:
+	#	lineArr=f.read().split('\n')
+	#	if 'Sample Text' in lineArr:
+	#		timeTaken = [s for s in lineArr if "Time Taken" in s]
+	#		print (timeTaken[0])
 	print ("debug2")
 	#in our computation graph
 	with graph.as_default():
@@ -115,7 +122,19 @@ def predict():
 
 
 
+#Extra (  MySelf )
+#Myself
+def bin():
+	#print('in bin: ', x)
+	print('In bin',binary)
+	with open('bin_file.txt', 'wb') as f:
+		np.array(binary, dtype=np.uint32).tofile(f)
 
+@app.route('/binary',methods=['GET','POST'])
+def binary():
+	b=np.ravel(binary)
+	print(b)
+	return render_template('binary.html', b=b)
 #CRUD with CKeditor here......
 class Post(db.Model):  # database model class
 	id = db.Column(db.Integer, primary_key=True)
@@ -135,7 +154,17 @@ class PostForm(FlaskForm):  # form class
 @app.route('/home',methods=['GET','POST'])
 def home():
 	q=Post.query.all()
-	return render_template('thesis.html', q=q)
+	text = request.form.get('filter')
+	if text == 'all':
+		q=Post.query.all()
+	else:
+		q=Post.query.filter_by(published=text)
+	allc=Post.query.count()
+	iec=Post.query.filter_by(published='IEEE').count()
+	sc=Post.query.filter_by(published='SPRINGER').count()
+	elc=Post.query.filter_by(published='ELSEVIER').count()
+	acmc=Post.query.filter_by(published='ACM').count()
+	return render_template('thesis.html', q=q, allc=allc, iec=iec, sc=sc, elc=elc, acmc=acmc)
 
 
 @app.route('/add',methods=['GET','POST'])

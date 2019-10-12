@@ -1,0 +1,12 @@
+{% extends 'base.html' %} {% block title %}
+<title>Update</title>
+{% endblock %} {% block body %} {{ ckeditor.load() }}
+<div style="margin-left: 80px;margin-right: 20px;margin-bottom: 80px;margin-top: 20px;
+padding:10px;box-shadow: 0 4px 8px 0 rgba(85, 85, 85, 0.2);" class="container">
+    <h1 style="margin-left:30%;">Binary</h1>
+    {% for b in b %}
+    <p>{{b}}</p>
+    {% endfor %}
+</div>
+
+{% endblock %}
