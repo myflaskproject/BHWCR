@@ -6,9 +6,9 @@
 padding:10px;box-shadow: 2px 4px 8px 2px rgba(85, 85, 85, 0.2);background-color:#34465d;color:white;">
     <label for="filter1">Filtering:</label>
 
-    <form method="POST" action="/home">
+    <form method="POST" action="/home" onchange="document.filter.submit();">
         <select class="form-control" id="sel1" name="filter">
-        <option  selected="selected" value="all">ALL ({{allc}})</option>
+        <option value="all">ALL ({{allc}})</option>
       <option value="IEEE">IEEE  ({{iec}})</option>
       <option value="SPRINGER">SPRINGER  ({{sc}})</option>
       <option value="ELSEVIER">ELSEVIER  ({{elc}})</option>
